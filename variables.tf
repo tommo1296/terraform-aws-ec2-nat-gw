@@ -14,3 +14,24 @@ variable "tags" {
   type          = map(string)
   default       = {}
 }
+
+variable "private_subnet_lookup_tags" {
+  description   = "A map of tags used to search for private subnets to allow"
+  type          = map(string)
+
+  default = {
+    Type = "Private"
+  }
+}
+
+variable "custom_ingress_rules" {
+  description   = "Map of additional ingress rules for the SG"
+  type          = list(map(string))
+  default       = []
+}
+
+variable "custom_egress_rules" {
+  description   = "Map of additional egress rules for the SG"
+  type          = list(map(string))
+  default       = []
+}
