@@ -58,3 +58,49 @@ resource "aws_security_group_rule" "custom_egress_rules" {
   protocol            = element(var.custom_egress_rules, count.index).protocol
   cidr_blocks         = split(",", element(var.custom_egress_rules, count.index).cidr_blocks)
 }
+
+resource "aws_network_interface" "nat_gateway_eni" {
+  subnet_id = data.aws_subnet.destination_subnet.id
+
+  source_dest_check = false
+
+  security_groups = [aws_security_group.nat_gateway_sg.id]
+
+  tags = merge(
+    {
+      Name = "${var.name}-eni"
+    },
+    var.tags
+  )
+}
+
+resource "aws_instance" "nat_gateway" {
+  ami             = data.aws_ami.nat_gateway_ami.id
+  instance_type   = var.instance_type
+
+  key_name = var.key_name
+
+  network_interface {
+    network_interface_id  = aws_network_interface.nat_gateway_eni.id
+    device_index          = 0
+  }
+
+  root_block_device {
+    volume_size = 8
+  }
+
+  tags = merge(
+    {
+      Name = var.name
+    },
+    var.tags
+  )
+}
+
+resource "aws_route" "nat_gateway_route" {
+  for_each = data.aws_route_table.private_route_tables
+
+  route_table_id          = each.value.route_table_id
+  destination_cidr_block  = "0.0.0.0/0"
+  instance_id             = aws_instance.nat_gateway.id
+}
