@@ -102,5 +102,5 @@ resource "aws_route" "nat_gateway_route" {
 
   route_table_id          = each.value.route_table_id
   destination_cidr_block  = "0.0.0.0/0"
-  instance_id             = aws_instance.nat_gateway.id
+  network_interface_id    = aws_network_interface.nat_gateway_eni.id
 }
