@@ -1,11 +1,14 @@
-data "aws_subnet_ids" "private_subnet_ids" {
-  vpc_id = var.vpc_id
+data "aws_subnets" "private_subnet_ids" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
 
   tags = var.private_subnet_lookup_tags
 }
 
 data "aws_subnet" "private_subnets" {
-  for_each  = data.aws_subnet_ids.private_subnet_ids.ids
+  for_each  = toset(data.aws_subnets.private_subnet_ids.ids)
   id        = each.value
 }
 
@@ -29,6 +32,6 @@ data "aws_ami" "nat_gateway_ami" {
 }
 
 data "aws_route_table" "private_route_tables" {
-  for_each    = data.aws_subnet_ids.private_subnet_ids.ids
+  for_each    = toset(data.aws_subnets.private_subnet_ids.ids)
   subnet_id   = each.value
 }

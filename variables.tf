@@ -62,3 +62,9 @@ variable "key_name" {
   type          = string
   default       = ""
 }
+
+variable "enable_public_ip" {
+  description   = "Whether to enable a public IP for the NAT Gateway"
+  type          = bool
+  default       = true
+}
