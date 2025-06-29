@@ -74,6 +74,19 @@ resource "aws_network_interface" "nat_gateway_eni" {
   )
 }
 
+resource "aws_eip" "nat_gateway_eip" {
+  count = var.enable_public_ip ? 1 : 0
+
+  network_interface = aws_network_interface.nat_gateway_eni.id
+
+  tags = merge(
+    {
+      Name = "${var.name}-eip"
+    },
+    var.tags
+  )
+}
+
 resource "aws_instance" "nat_gateway" {
   ami             = data.aws_ami.nat_gateway_ami.id
   instance_type   = var.instance_type
