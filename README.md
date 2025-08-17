@@ -14,7 +14,7 @@ The resources this module creates / modifies are:
 
 ## Breaking change
 
-In `v2.0.0`, this module removed support for AMI looking and requires that you provide `ami_id` yourself.  This AMI ID must contain the required packages to allow it to run as a NAT Gateway from startup as I have not written a userdata script yet that will provision it in this way.
+In `v0.3.0`, this module removed support for AMI looking and requires that you provide `ami_id` yourself.  This AMI ID must contain the required packages to allow it to run as a NAT Gateway from startup as I have not written a userdata script yet that will provision it in this way.
 
 The AMI that this module was using was based on Amazon Linux 1 and AWS have removed support for this image a long time ago.  AWS have totally removed the AMI now and have not replaced it with a modern Amazon linux base image.  Therefore, you will need to create your own base AMI as suggested above.
 
@@ -43,7 +43,9 @@ This module is compatible with the terraform-aws-vpc module from the Terraform r
 ```
 module "nat-gateway" {
   source = "https://github.com/tommo1296/terraform-aws-ec2-nat-gw"
-  version = "0.1.0"
+  version = "0.3.0"
+
+  ami_id = "ami-123"
 
   vpc_id = "vpc-12345"
 }
@@ -56,7 +58,7 @@ You can add ingress and egress rules as required.  For example, you might want t
 ```
 module "nat-gateway" {
   source = "https://github.com/tommo1296/terraform-aws-ec2-nat-gw"
-  version = "0.1.0"
+  version = "0.3.0"
 
   ami_id = "ami-123"
 
