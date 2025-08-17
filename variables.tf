@@ -51,6 +51,11 @@ variable "custom_egress_rules" {
   default       = []
 }
 
+variable "ami_id" {
+  description   = "AMI ID to use for the EC2 NAT Gateway"
+  type          = string
+}
+
 variable "instance_type" {
   description   = "Instance type of the EC2 NAT Gateway.  Defaults to cheapest per month"
   type          = string
