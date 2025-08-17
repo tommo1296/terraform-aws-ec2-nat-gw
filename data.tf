@@ -21,16 +21,6 @@ data "aws_subnet" "destination_subnet" {
   }
 }
 
-data "aws_ami" "nat_gateway_ami" {
-  most_recent   = true
-  owners        = ["137112412989"]
-
-  filter {
-    name    = "name"
-    values  = ["amzn-ami-vpc-nat-*"]
-  }
-}
-
 data "aws_route_table" "private_route_tables" {
   for_each    = toset(data.aws_subnets.private_subnet_ids.ids)
   subnet_id   = each.value

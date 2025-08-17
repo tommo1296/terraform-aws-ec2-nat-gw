@@ -12,6 +12,14 @@ The resources this module creates / modifies are:
  - EC2 Instance
  - Route table
 
+## Breaking change
+
+In `v2.0.0`, this module removed support for AMI looking and requires that you provide `ami_id` yourself.  This AMI ID must contain the required packages to allow it to run as a NAT Gateway from startup as I have not written a userdata script yet that will provision it in this way.
+
+The AMI that this module was using was based on Amazon Linux 1 and AWS have removed support for this image a long time ago.  AWS have totally removed the AMI now and have not replaced it with a modern Amazon linux base image.  Therefore, you will need to create your own base AMI as suggested above.
+
+Eventually, I will add support to create a Amazon Linux 2023 base image in to a NAT Gateway, but as of yet I have not had time to sit and work that out.
+
 ## Dependencies
 
 This modules requires that a VPC is already created with Public and Private subnets available.
@@ -50,6 +58,8 @@ module "nat-gateway" {
   source = "https://github.com/tommo1296/terraform-aws-ec2-nat-gw"
   version = "0.1.0"
 
+  ami_id = "ami-123"
+
   vpc_id = "vpc-12345"
 
   custom_ingress_rules = [
@@ -76,5 +86,6 @@ module "nat-gateway" {
 | availability_zone | Destination of the NAT Gateway instance | no | a |
 | custom_ingress_rules | Custom ingress (see above example) | no | [] |
 | custom_egrees_rules | Custom egress (see above example) | no | [] |
+| ami_id | AMI ID containing NAT Gateway support pre-installed | yes |  |
 | instance_type | Type of EC2 instance | no | t3a.nano |
 | key_name | Key pair to apply | no |  |

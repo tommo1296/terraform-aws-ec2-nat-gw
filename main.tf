@@ -88,7 +88,7 @@ resource "aws_eip" "nat_gateway_eip" {
 }
 
 resource "aws_instance" "nat_gateway" {
-  ami             = data.aws_ami.nat_gateway_ami.id
+  ami             = var.ami_id
   instance_type   = var.instance_type
 
   key_name = var.key_name
